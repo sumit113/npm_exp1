@@ -17,6 +17,9 @@ jobs:
         package:
           - is-even-by-cv
           - is-odd-by-cv
+        package-path:
+          - packages/is-even-by-cv
+          - packages/is-odd-by-cv
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
@@ -31,7 +34,7 @@ jobs:
 
     - name: Publish package
       run: |
-        cd ${{ matrix.package }}
+        cd ${{ matrix.package-path }}
         if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep ${{ matrix.package }}; then
           npm publish
         else
