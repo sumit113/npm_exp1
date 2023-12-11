@@ -1,33 +1,41 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
-name: Node.js Package
+name: Publish to npm
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/is-even-by-cv/**'
+      - 'packages/is-odd-by-cv/**'
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - is-even-by-cv
+          - is-odd-by-cv
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - run: npm ci
-      - run: npm test
+    - name: Check out repository
+      uses: actions/checkout@v2
 
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+
+    - name: Publish package
+      run: |
+        cd ${{ matrix.package }}
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep ${{ matrix.package }}; then
+          npm publish
+        else
+          echo "No changes in ${{ matrix.package }}, skipping publish."
+        fi
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
