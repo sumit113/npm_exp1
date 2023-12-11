@@ -1,4 +1,4 @@
 export function isOdd(n) {
-    let rs =  n % 2 !== 0
-    return rs ;
+    let res =  n % 2 !== 0
+    return res ;
   }
