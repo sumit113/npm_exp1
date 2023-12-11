@@ -15,10 +15,11 @@ jobs:
       fail-fast: false
       matrix:
         package:
-         - name: is-even-by-cv
+          - name: is-even-by-cv
             path: packages/is-even-by-cv
-         - name: is-odd-by-cv
+          - name: is-odd-by-cv
             path: packages/is-odd-by-cv
+            
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
