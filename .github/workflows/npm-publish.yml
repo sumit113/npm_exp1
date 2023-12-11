@@ -15,11 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - is-even-by-cv
-          - is-odd-by-cv
-        package-path:
-          - packages/is-even-by-cv
-          - packages/is-odd-by-cv
+         - name: is-even-by-cv
+            path: packages/is-even-by-cv
+         - name: is-odd-by-cv
+            path: packages/is-odd-by-cv
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -37,12 +36,12 @@ jobs:
 
       - name: Publish package
         run: |
-          cd ${{ matrix.package-path }}
+          cd ${{ matrix.package.path }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          if echo "$CHANGED_FILES" | grep -q "${{ matrix.package }}"; then
+          if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
             npm publish
           else
-            echo "No changes in ${{ matrix.package }}, skipping publish."
+            echo "No changes in ${{ matrix.package.name }}, skipping publish."
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
