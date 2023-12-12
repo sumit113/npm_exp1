@@ -43,6 +43,12 @@ jobs:
           cd ${{ matrix.package.path }}
           CURRENT_VERSION=$(node -pe "require('./package.json').version")
         id: version
+
+      - name: Echo New Version
+        run: echo "New version is ${{ env.VERSION }}"
+        env:
+         VERSION: ${{ steps.version.outputs.version }}
+
       - name: Publish package
         run: |
           cd ${{ matrix.package.path }}
