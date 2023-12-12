@@ -33,22 +33,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: 'Automated Version Bump'  
-        uses: 'qubetools/qubetools-gh-action-semantic-version-tag-bump@v1.0.0'
-        id: version-bump  
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          PACKAGEJSON_DIR: ${{ matrix.package.path }}
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@master
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          major-wording: 'major,Major,breaking,Breaking'   
-          minor-wording: 'minor,Minor,new,New,feat,Feat,feature,Feature,release,Release'
-          patch-wording: 'fix,Fix,fixes,Fixes,patch,Patch' 
-          rc-wording: 'rc,pre'  
-          hours-to-go-back: 24 
-          skip-if-no-commits: 'true' 
-          tag-prefix: 'v'   
-          commit-message: 'CI: bumps version to {{version}} [skip ci]' 
-          bump-policy: 'last-commit'  
+           # specify the folder where package.json is located
+           folder: packages/is-even-by-cv
+           # specify the wording for minor version bump
+           minor-wording: 'feat,minor'
+           # specify the wording for major version bump
+           major-wording: 'BREAKING,major'  
 
       - name: Authenticate with npm
         run: |
