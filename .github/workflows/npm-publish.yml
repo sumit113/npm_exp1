@@ -38,23 +38,25 @@ jobs:
       - name: Authenticate with npm
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: Get current version
         run: |
           cd ${{ matrix.package.path }}
-          CURRENT_VERSION=$(node -pe "require('./package.json').version")
+          export CURRENT_VERSION=$(node -pe "require('./package.json').version")
         id: version
 
       - name: Echo New Version
-        run: echo "New version is ${{ env.VERSION }}"
-        env:
-         VERSION: ${{ steps.version.outputs.version }}
+        run: echo "New version is ${{ env.CURRENT_VERSION }}"
+        
 
-      - name: Publish package
+      - name: Publish package if changes
         run: |
           cd ${{ matrix.package.path }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
-            npm version --no-git-tag-version ${CURRENT_VERSION}
+            npm version --no-git-tag-version patch
+            export NEW_VERSION=$(node -pe "require('./package.json').version")
+            echo "Publishing version $NEW_VERSION"
             npm publish
           else
             echo "No changes in ${{ matrix.package.name }}, skipping publish."
