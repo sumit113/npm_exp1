@@ -47,14 +47,14 @@ jobs:
 
       - name: Echo New Version
         run: echo "New version is ${{ env.CURRENT_VERSION }}"
-        
+
 
       - name: Publish package if changes
         run: |
           cd ${{ matrix.package.path }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
-            npm version --no-git-tag-version patch
+            npm version patch
             export NEW_VERSION=$(node -pe "require('./package.json').version")
             echo "Publishing version $NEW_VERSION"
             npm publish
