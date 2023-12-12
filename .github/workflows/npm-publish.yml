@@ -43,7 +43,7 @@ jobs:
             cd ./packages/is-even-by-cv
             npm version patch -m "Bump the version to %s"
             # Push the changes back to the repository
-            git push origin ${{ github.ref }}
+            # git push origin ${{ github.ref }}
           fi
       # - name: Automated Version Bump
       #   uses: phips28/gh-action-bump-version@master
@@ -57,9 +57,9 @@ jobs:
       #      # specify the wording for major version bump
       #      major-wording: 'BREAKING,major'  
 
-      - name: Authenticate with npm
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      # - name: Authenticate with npm
+      #   run: |
+      #     echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
       - name: Get current version
         run: |
@@ -71,23 +71,23 @@ jobs:
         run: echo "New version is ${{ env.CURRENT_VERSION }}"
 
 
-      - name: Publish package if changes
-        run: |
-          cd ${{ matrix.package.path }}
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
-            npm version patch
-            export NEW_VERSION=$(node -pe "require('./package.json').version")
-            echo "Publishing version $NEW_VERSION"
-            npm publish
-            echo "Updating local package.json"
-            git config --local user.email "cvaruncv1998@gmail.com"
-            git config --local user.name "cv-arun"
-            git add package.json
-            git commit -m "Bump version to $NEW_VERSION"
-             git push -u origin main
-          else
-            echo "No changes in ${{ matrix.package.name }}, skipping publish."
+      # - name: Publish package if changes
+      #   run: |
+      #     cd ${{ matrix.package.path }}
+      #     CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+      #     if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
+      #       npm version patch
+      #       export NEW_VERSION=$(node -pe "require('./package.json').version")
+      #       echo "Publishing version $NEW_VERSION"
+      #       npm publish
+      #       echo "Updating local package.json"
+      #       git config --local user.email "cvaruncv1998@gmail.com"
+      #       git config --local user.name "cv-arun"
+      #       git add package.json
+      #       git commit -m "Bump version to $NEW_VERSION"
+      #        git push -u origin main
+      #     else
+      #       echo "No changes in ${{ matrix.package.name }}, skipping publish."
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
