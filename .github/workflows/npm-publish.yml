@@ -59,7 +59,6 @@ jobs:
             echo "Publishing version $NEW_VERSION"
             npm publish
             echo "Updating local package.json"
-            npm --no-git-tag-version version $NEW_VERSION
             git add package.json
             git commit -m "Bump version to $NEW_VERSION"
             git push
