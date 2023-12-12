@@ -3,7 +3,7 @@ name: Publish to npm
 on:
   push:
     branches:
-      - main
+      - feature
     paths:
       - 'packages/is-even-by-cv/**'
       - 'packages/is-odd-by-cv/**'
