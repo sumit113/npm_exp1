@@ -64,7 +64,7 @@ jobs:
       - name: Get current version
         run: |
           cd ${{ matrix.package.path }}
-          export CURRENT_VERSION=$(node -pe "require('./package.json').version")
+          export CURRENT_VERSION=$(node -pe "require('./packages/is-even-by-cv/package.json').version")
         id: version
 
       - name: Echo New Version
