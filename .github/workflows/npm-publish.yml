@@ -38,7 +38,7 @@ jobs:
         id: version-bump  
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          PACKAGEJSON_DIR: ${{ matrix.package }}
+          PACKAGEJSON_DIR: ${{ matrix.package.path }}
         with:
           major-wording: 'major,Major,breaking,Breaking'   
           minor-wording: 'minor,Minor,new,New,feat,Feat,feature,Feature,release,Release'
@@ -56,7 +56,7 @@ jobs:
 
       - name: Get current version
         run: |
-          cd ${{ matrix.package }}
+          cd ${{ matrix.package.path }}
           export CURRENT_VERSION=$(node -pe "require('./package.json').version")
         id: version
 
@@ -66,7 +66,7 @@ jobs:
 
       - name: Publish package if changes
         run: |
-          cd ${{ matrix.package }}
+          cd ${{ matrix.package.path }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
             npm version patch
