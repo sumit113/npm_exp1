@@ -88,9 +88,9 @@ jobs:
       #        git push -u origin main
       #     else
       #       echo "No changes in ${{ matrix.package.name }}, skipping publish."
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # fi
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
 
