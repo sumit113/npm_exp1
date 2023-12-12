@@ -32,18 +32,30 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Automated Version Bump
-        uses: phips28/gh-action-bump-version@master
-        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-           # specify the folder where package.json is located
-           folder: packages/is-even-by-cv
-           # specify the wording for minor version bump
-           minor-wording: 'feat,minor'
-           # specify the wording for major version bump
-           major-wording: 'BREAKING,major'  
+        
+      - name: Check modified files
+        run: |
+          # Get the list of modified files
+          MODIFIED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})
+          # Check if any of the modified files are in the folder
+          if echo "$MODIFIED_FILES" | grep -q "packages/is-even-by-cv/**"; then
+            # Bump the version of the package.json file in the app folder
+            cd ./packages/is-even-by-cv
+            npm version patch -m "Bump the version to %s"
+            # Push the changes back to the repository
+            git push origin ${{ github.ref }}
+          fi
+      # - name: Automated Version Bump
+      #   uses: phips28/gh-action-bump-version@master
+      #   env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #      # specify the folder where package.json is located
+      #      folder: packages/is-even-by-cv
+      #      # specify the wording for minor version bump
+      #      minor-wording: 'feat,minor'
+      #      # specify the wording for major version bump
+      #      major-wording: 'BREAKING,major'  
 
       - name: Authenticate with npm
         run: |
