@@ -58,6 +58,11 @@ jobs:
             export NEW_VERSION=$(node -pe "require('./package.json').version")
             echo "Publishing version $NEW_VERSION"
             npm publish
+            echo "Updating local package.json"
+            npm --no-git-tag-version version $NEW_VERSION
+            git add package.json
+            git commit -m "Bump version to $NEW_VERSION"
+            git push
           else
             echo "No changes in ${{ matrix.package.name }}, skipping publish."
           fi
