@@ -63,7 +63,7 @@ jobs:
             git config --local user.name "cv-arun"
             git add package.json
             git commit -m "Bump version to $NEW_VERSION"
-            git push
+             git push -u origin main
           else
             echo "No changes in ${{ matrix.package.name }}, skipping publish."
           fi
