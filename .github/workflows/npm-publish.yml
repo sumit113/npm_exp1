@@ -38,7 +38,11 @@ jobs:
       - name: Authenticate with npm
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
+      - name: Get current version
+        run: |
+          cd ${{ matrix.package.path }}
+          CURRENT_VERSION=$(node -pe "require('./package.json').version")
+        id: version
       - name: Publish package
         run: |
           cd ${{ matrix.package.path }}
