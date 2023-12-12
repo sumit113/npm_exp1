@@ -35,6 +35,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Authenticate with npm
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: Publish package
         run: |
           cd ${{ matrix.package.path }}
