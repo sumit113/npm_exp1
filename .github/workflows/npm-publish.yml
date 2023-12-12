@@ -48,6 +48,7 @@ jobs:
           cd ${{ matrix.package.path }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
+            npm version --no-git-tag-version ${CURRENT_VERSION}
             npm publish
           else
             echo "No changes in ${{ matrix.package.name }}, skipping publish."
