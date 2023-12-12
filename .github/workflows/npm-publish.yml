@@ -15,10 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - name: is-even-by-cv
-            path: packages/is-even-by-cv
-          - name: is-odd-by-cv
-            path: packages/is-odd-by-cv
+          - packages/is-even-by-cv
+          - packages/is-odd-by-cv
             
     steps:
       - name: Check out repository
@@ -40,7 +38,7 @@ jobs:
         id: version-bump  
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          PACKAGEJSON_DIR: ${{ matrix.package.path }}
+          PACKAGEJSON_DIR: ${{ matrix.package }}
         with:
           major-wording: 'major,Major,breaking,Breaking'   
           minor-wording: 'minor,Minor,new,New,feat,Feat,feature,Feature,release,Release'
@@ -58,7 +56,7 @@ jobs:
 
       - name: Get current version
         run: |
-          cd ${{ matrix.package.path }}
+          cd ${{ matrix.package }}
           export CURRENT_VERSION=$(node -pe "require('./package.json').version")
         id: version
 
@@ -68,7 +66,7 @@ jobs:
 
       - name: Publish package if changes
         run: |
-          cd ${{ matrix.package.path }}
+          cd ${{ matrix.package }}
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           if echo "$CHANGED_FILES" | grep -q "${{ matrix.package.name }}"; then
             npm version patch
