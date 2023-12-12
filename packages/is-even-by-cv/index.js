@@ -1,4 +1,4 @@
 export function isEven(n){ 
-  let result6=n % 2 === 0
-    return result6 ;
+  let result=n % 2 === 0
+    return result ;
   }
